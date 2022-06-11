@@ -46,9 +46,13 @@ contract M3rcury is ERC1155, Ownable {
         bool saleIsActive;
     }
 
+    address payable _owner;
+
     mapping(uint256 => dropVariables) public dropInfo;
 
-    constructor() ERC1155("") {}
+    constructor() ERC1155("") {
+        _owner = payable(msg.sender);
+    }
 
     function uri(uint256 id) override public view returns (string memory) {
         return(dropInfo[id].tokenURI);
@@ -97,12 +101,13 @@ contract M3rcury is ERC1155, Ownable {
         require(msg.value / amount == dropInfo[id].price, "Drop price is incorrect");
 
         _mint(msg.sender, id, amount, "");
+        withdraw();
         dropInfo[id].supply += amount;
     }
 
-    function withdraw() public onlyOwner {
+    function withdraw() internal {
         require(address(this).balance >= 0, "No ether");
-        owner().call{value: address(this).balance}("");
+        _owner.transfer(address(this).balance);
     }
 
 }

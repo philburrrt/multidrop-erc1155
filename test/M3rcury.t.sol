@@ -44,14 +44,12 @@ contract M3rcuryTest is Test {
 
     // }
 
-    function testMint() public returns(uint256) {
+    function testMint() public {
         vm.startPrank(owner);
         mercury.createDrop(0, 500e15, 10, uri);
         mercury.activateSale(0);
         mercury.mint{value: 500e15}(0, 1);
         assert(mercury.balanceOf(owner, 0) == 1);
-        assert(address(mercury).balance == 500e15);
-        mercury.withdraw();
         vm.stopPrank();
     }
 }
