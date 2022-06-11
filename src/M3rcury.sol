@@ -100,10 +100,9 @@ contract M3rcury is ERC1155, Ownable {
         dropInfo[id].supply += amount;
     }
 
-    function withdraw(uint256 amount) public onlyOwner {
-        require(amount <= address(this).balance, "Not enough ether");
-        payable(msg.sender).transfer(amount);
+    function withdraw() public onlyOwner {
+        require(address(this).balance >= 0, "No ether");
+        owner().call{value: address(this).balance}("");
     }
-
 
 }
