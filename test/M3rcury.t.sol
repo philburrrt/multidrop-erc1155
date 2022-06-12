@@ -19,6 +19,8 @@ contract M3rcuryTest is Test {
     address mercuryAddr;
     address payable _mercuryAddr;
 
+    address testAddr = 0xea414355A738D5715379Db885Db889049c20fc92;
+
     //prank makes mercury's owner == msg.sender, which is the default account
 
     function setUp() public {
@@ -132,16 +134,32 @@ contract M3rcuryTest is Test {
         vm.stopPrank();
     }
 
-    // function testCreateDrop() public {
+    function testCreateDrop() public {
+        vm.startPrank(owner);
+        mercury.activateSale(0);
+        mercury.createDrop(0, 500e15, 10, "uri");
+        (uint256 price, uint256 maxSupply, uint256 supply, string memory tokenURI, bool saleIsActive) = mercury.dropInfo(0);
+        assert(price == 500e15);
+        assert(maxSupply == 10);
+        assert(supply == 0);
+        assert(keccak256(abi.encodePacked(tokenURI)) == keccak256(abi.encodePacked("uri")));
+        assert(saleIsActive == true);
+        vm.stopPrank();
+    }
+
+    function testFailCreateDrop() public {
+        vm.expectRevert();
+        mercury.createDrop(0, 500e15, 10, "uri");
+    }
+
+    // function testAirdrop1Address() public {
     //     vm.startPrank(owner);
     //     mercury.activateSale(0);
     //     mercury.createDrop(0, 500e15, 10, "uri");
-    //     (uint256 price, uint256 maxSupply, uint256 supply, string memory tokenURI, bool saleIsActive) = mercury.dropInfo(0);
-    //     assert(price == 500e15);
-    //     assert(maxSupply == 10);
-    //     assert(supply == 0);
-    //     assert(keccak256(tokenURI) == keccak256("uri"));
-    //     assert(saleIsActive == true);
+    //     address[] memory addrList;
+    //     addrList[0] = testAddr;
+    //     mercury.airdrop(0, addrList);
+    //     assert(mercury.balanceOf(testAddr, 0) == 1);
     //     vm.stopPrank();
     // }
 
