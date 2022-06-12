@@ -101,11 +101,10 @@ contract M3rcury is ERC1155, Ownable {
         require(msg.value / amount == dropInfo[id].price, "Drop price is incorrect");
 
         _mint(msg.sender, id, amount, "");
-        withdraw();
         dropInfo[id].supply += amount;
     }
 
-    function withdraw() internal {
+    function withdraw() public {
         require(address(this).balance >= 0, "No ether");
         _owner.transfer(address(this).balance);
     }
