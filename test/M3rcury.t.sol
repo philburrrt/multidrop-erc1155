@@ -19,6 +19,8 @@ contract M3rcuryTest is Test {
     address mercuryAddr;
     address payable _mercuryAddr;
 
+    address[] internal airdropList;
+
     address testAddr = 0xea414355A738D5715379Db885Db889049c20fc92;
 
     //prank makes mercury's owner == msg.sender, which is the default account
@@ -152,15 +154,40 @@ contract M3rcuryTest is Test {
         mercury.createDrop(0, 500e15, 10, "uri");
     }
 
-    // function testAirdrop1Address() public {
-    //     vm.startPrank(owner);
-    //     mercury.activateSale(0);
-    //     mercury.createDrop(0, 500e15, 10, "uri");
-    //     address[] memory addrList;
-    //     addrList[0] = testAddr;
-    //     mercury.airdrop(0, addrList);
-    //     assert(mercury.balanceOf(testAddr, 0) == 1);
-    //     vm.stopPrank();
-    // }
+    function testAirdrop1Address() public {
+        vm.startPrank(owner);
+        mercury.activateSale(0);
+        mercury.createDrop(0, 500e15, 10, "uri");
+        airdropList.push(testAddr);
+        mercury.airdrop(0, airdropList);
+        assert(mercury.balanceOf(testAddr, 0) == 1);
+        vm.stopPrank();
+    }
+
+    function testAirdrop10Address() public {
+        vm.startPrank(owner);
+        mercury.activateSale(0);
+        mercury.createDrop(0, 500e15, 10, "uri");
+        airdropList.push(address(10));
+        mercury.airdrop(0, airdropList);
+        for(uint i = 0; i < airdropList.length; i++) {
+            assert(mercury.balanceOf(airdropList[i], 0) == 1);
+        }
+        vm.stopPrank();
+    }
+
+    function testWithdrawal() public {
+        vm.startPrank(owner);
+        mercury.activateSale(0);
+        mercury.createDrop(0, 500e15, 10, "uri");
+        mercury.mint{value: 500e15}(0, 1);
+        mercury.withdraw();
+        vm.stopPrank();
+    }
+
+    function testFailWithdrawal() public {
+        vm.expectRevert();
+        mercury.withdraw();
+    }
 
 }
