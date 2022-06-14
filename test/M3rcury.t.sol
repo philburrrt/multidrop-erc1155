@@ -190,4 +190,25 @@ contract M3rcuryTest is Test {
         mercury.withdraw();
     }
 
+    function testUserWithdrawal() public {
+        vm.startPrank(owner);
+        mercury.activateSale(0);
+        mercury.createDrop(0, 500e15, 10, "uri");
+        mercury.mint{value: 500e15}(0, 1);
+        vm.stopPrank();
+        uint256 startBalance = owner.balance;
+        vm.startPrank(testAddr);
+        mercury.withdraw();
+        uint256 endBalance = owner.balance;
+        assert(endBalance == startBalance + 500e15);
+        vm.stopPrank();
+    }
+
+    function testFailUserWithdrawal() public {
+        vm.startPrank(testAddr);
+        vm.expectRevert();
+        mercury.withdraw();
+        vm.stopPrank();
+    }
+
 }
