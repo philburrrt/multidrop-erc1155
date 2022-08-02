@@ -1,0 +1,29 @@
+{
+    "description": "Spontaneous Brainmash #3", 
+    "external_url": "https://m3org.com", 
+    "image": "ipfs://bafybeih7wkrezebvdjx4625zkgmbtpcxnsjvgnup6aawzrt6ka2ewcsuku/fUw7Eo2.jpg",
+    "animation_url": "ipfs://bafybeib2ncltxknmociylfdpw5p7djsin4h64vfic32totxaxqj5tvwdo4/3.glb",
+    "name": "#3 dopesauce",
+    "attributes": [ 
+      {
+      "trait_type": "Creator", 
+      "value": "Jin, Godfrey, Emotionull"
+      },
+      {
+        "trait_type": "3d",
+        "value": "true"
+      },
+      {
+        "trait_type": "triangles",
+        "value": "4883"
+      },
+      {
+        "value_type": "materials",
+        "trait_type": "6"
+      },
+      {
+        "value_type": "size",
+        "trait_type": "0.97 MB"
+      }
+     ]
+  }

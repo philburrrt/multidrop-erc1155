@@ -1,0 +1,29 @@
+{
+    "description": "Spontaneous Brainmash #2", 
+    "external_url": "https://m3org.com", 
+    "image": "ipfs://https://bafybeih7wkrezebvdjx4625zkgmbtpcxnsjvgnup6aawzrt6ka2ewcsuku/fUw7Eo2.jpg",
+    "animation_url": "ipfs://bafybeiaf4ri3lipxa32urxd23ozoyuafyjsbikdmmep2mg4ywbcyiwv7jm/2.glb",
+    "name": "#2 Dank Nugz",
+    "attributes": [ 
+      {
+      "trait_type": "Creator", 
+      "value": "Jin, Godfre, Emotionull, IX"
+      },
+      {
+        "trait_type": "3d",
+        "value": "true"
+      },
+      {
+        "trait_type": "triangles",
+        "value": "4883"
+      },
+      {
+        "trait_type": "materials",
+        "value": "6"
+      },
+      {
+        "value_type": "size",
+        "trait_type": "3.7 MB"
+      }
+     ]
+  }

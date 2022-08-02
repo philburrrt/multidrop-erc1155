@@ -1,0 +1,29 @@
+{
+    "description": "Spontaneous Brainmash #4", 
+    "external_url": "https://m3org.com", 
+    "image": "ipfs://bafybeih7wkrezebvdjx4625zkgmbtpcxnsjvgnup6aawzrt6ka2ewcsuku/fUw7Eo2.jpg",
+    "animation_url": "ipfs://bafybeihc4c6on53qwpalt466qphbtkqpurvea5erjnkcf7wevygykc4kju/4.glb",
+    "name": "Taco Dank",
+    "attributes": [ 
+      {
+      "trait_type": "Creator", 
+      "value": "Godfrey, Bo0g, HumbleTime"
+      },
+      {
+        "trait_type": "3d",
+        "value": "true"
+      },
+      {
+        "trait_type": "triangles",
+        "value": "4883"
+      },
+      {
+        "value_type": "materials",
+        "trait_type": "6"
+      },
+      {
+        "value_type": "size",
+        "trait_type": "1.24 MB"
+      }
+     ]
+  }
