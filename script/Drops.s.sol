@@ -13,6 +13,6 @@ contract ContractScript is Script {
 
     function run() public {
         vm.broadcast();
-        new Drops(testAddr);
+        new Drops(raAddr);
     }
 }
