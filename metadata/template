@@ -1,13 +1,13 @@
 {
-    "description": "", 
-    "external_url": "https://m3org.com", 
-    "image": "ipfs://",
-    "animation_url": "ipfs://",
-    "name": "",
-    "attributes": [ 
-      {
-      "trait_type": "", 
+  "description": "",
+  "external_url": "https://personal-site.com",
+  "image": "ipfs://",
+  "animation_url": "ipfs://",
+  "name": "",
+  "attributes": [
+    {
+      "trait_type": "",
       "value": ""
-      }
-     ]
-  }
+    }
+  ]
+}
