@@ -23,11 +23,6 @@ contract Drops is ERC1155, Ownable {
         return (dropInfo[id].tokenURI);
     }
 
-    function contractURI() public pure returns (string memory) {
-        return
-            "https://cdn.jsdelivr.net/gh/philburrrt/M3rcury/metadata/storefront";
-    }
-
     function activateSale(uint256 id) public onlyOwner {
         dropInfo[id].saleIsActive = true;
     }
@@ -73,7 +68,7 @@ contract Drops is ERC1155, Ownable {
         }
     }
 
-    function mint(uint256 id, uint256 amount) public payable {
+    function mintDrop(uint256 id, uint256 amount) public payable {
         require(dropInfo[id].saleIsActive == true, "Sale is not active");
         require(dropInfo[id].maxSupply > 0, "Drop is not yet available");
         require(
