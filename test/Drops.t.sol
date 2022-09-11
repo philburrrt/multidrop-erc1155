@@ -20,6 +20,9 @@ contract DropsTest is Test {
 
     address[] internal airdropList;
 
+    address[] recipients;
+    uint256[] amounts;
+
     address testAddr = 0xea414355A738D5715379Db885Db889049c20fc92;
 
     //prank makes drops's owner == msg.sender, which is the default account
@@ -27,7 +30,7 @@ contract DropsTest is Test {
     function setUp() public {
         owner = msg.sender;
         vm.prank(owner);
-        drops = new Drops();
+        drops = new Drops(owner);
         dropsAddr = address(drops);
         _dropsAddr = payable(dropsAddr);
     }
@@ -104,46 +107,36 @@ contract DropsTest is Test {
         vm.stopPrank();
     }
 
-    function testDevMint1Token() public {
+    function testDevMintSelf() public {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.devMint(0, 1);
+        recipients = [owner];
+        amounts = [1];
+        drops.devMint(0, recipients, amounts);
         assert(drops.balanceOf(owner, 0) == 1);
         vm.stopPrank();
     }
 
-    function testDevMintMaxToken() public {
+    function testDevMintOverSupply() public {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.devMint(0, 10);
-        assert(drops.balanceOf(owner, 0) == 10);
-        vm.stopPrank();
+        recipients = [owner];
+        amounts = [11];
+        vm.expectRevert("Supply exceeded");
+        drops.devMint(0, recipients, amounts);
     }
 
-    function testFailDevMintNoActivation() public {
-        vm.startPrank(owner);
-        drops.createDrop(0, 500e15, 10, "uri");
-        vm.expectRevert();
-        drops.devMint(0, 1);
-        vm.stopPrank();
-    }
-
-    function testFailDevMintNoDrop() public {
-        vm.startPrank(owner);
-        drops.activateSale(0);
-        vm.expectRevert();
-        drops.devMint(0, 1);
-        vm.stopPrank();
-    }
-
-    function testFailDevMintOverSupply() public {
+    function testDevMintMultiple() public {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        vm.expectRevert();
-        drops.devMint(0, 11);
+        recipients = [owner, address(11)];
+        amounts = [1, 1];
+        drops.devMint(0, recipients, amounts);
+        assert(drops.balanceOf(owner, 0) == 1);
+        assert(drops.balanceOf(address(11), 0) == 1);
         vm.stopPrank();
     }
 
@@ -172,28 +165,6 @@ contract DropsTest is Test {
     function testFailCreateDrop() public {
         vm.expectRevert();
         drops.createDrop(0, 500e15, 10, "uri");
-    }
-
-    function testAirdrop1Address() public {
-        vm.startPrank(owner);
-        drops.activateSale(0);
-        drops.createDrop(0, 500e15, 10, "uri");
-        airdropList.push(testAddr);
-        drops.airdrop(0, airdropList);
-        assert(drops.balanceOf(testAddr, 0) == 1);
-        vm.stopPrank();
-    }
-
-    function testAirdrop10Address() public {
-        vm.startPrank(owner);
-        drops.activateSale(0);
-        drops.createDrop(0, 500e15, 10, "uri");
-        airdropList.push(address(10));
-        drops.airdrop(0, airdropList);
-        for (uint256 i = 0; i < airdropList.length; i++) {
-            assert(drops.balanceOf(airdropList[i], 0) == 1);
-        }
-        vm.stopPrank();
     }
 
     function testWithdrawal() public {

@@ -13,12 +13,10 @@ contract Drops is ERC1155, Ownable {
         bool saleIsActive;
     }
 
-    address payable _owner;
-
     mapping(uint256 => dropVariables) public dropInfo;
 
-    constructor() ERC1155("") {
-        _owner = payable(msg.sender);
+    constructor(address _owner) ERC1155("") {
+        transferOwnership(_owner);
     }
 
     function uri(uint256 id) public view override returns (string memory) {
@@ -44,35 +42,34 @@ contract Drops is ERC1155, Ownable {
         uint256 supplyAmt,
         string memory tokenURI
     ) public onlyOwner {
-        require(dropInfo[id].maxSupply == 0, "Drop already exists"); // if you set max supply, there's no turning back because the token can be minted at that point
+        require(dropInfo[id].maxSupply == 0, "Drop already exists");
         dropInfo[id].price = price;
         dropInfo[id].maxSupply = supplyAmt;
         dropInfo[id].tokenURI = tokenURI;
     }
 
-    function devMint(uint256 id, uint256 amount) public onlyOwner {
-        require(dropInfo[id].maxSupply > 0, "Drop is not available");
-        require(
-            dropInfo[id].supply + amount <= dropInfo[id].maxSupply,
-            "Sold out"
-        );
-
-        _mint(msg.sender, id, amount, "");
-        dropInfo[id].supply += amount;
+    function editDrop(
+        uint256 id,
+        uint256 price,
+        uint256 supplyAmt,
+        string memory tokenURI
+    ) public onlyOwner {
+        require(dropInfo[id].maxSupply != 0, "Drop does not exist");
+        require(dropInfo[id].supply <= supplyAmt, "Supply cannot be decreased");
+        dropInfo[id].price = price;
+        dropInfo[id].maxSupply = supplyAmt;
+        dropInfo[id].tokenURI = tokenURI;
     }
 
-    function airdrop(uint256 id, address[] calldata recipients)
-        external
-        onlyOwner
-    {
-        require(dropInfo[id].maxSupply > 0, "Drop is not available");
-        require(
-            dropInfo[id].supply + recipients.length <= dropInfo[id].maxSupply,
-            "Would exceed max supply"
-        );
+    function devMint(
+        uint256 id,
+        address[] calldata recipients,
+        uint256[] calldata amount
+    ) public onlyOwner {
         for (uint256 i = 0; i < recipients.length; i++) {
-            _mint(recipients[i], id, 1, "");
-            dropInfo[id].supply += 1;
+            require(amount[i] <= dropInfo[id].maxSupply, "Supply exceeded");
+            _mint(recipients[i], id, amount[i], "");
+            dropInfo[id].supply += amount[i];
         }
     }
 
@@ -94,6 +91,6 @@ contract Drops is ERC1155, Ownable {
 
     function withdraw() public {
         require(address(this).balance >= 0, "No ether");
-        _owner.transfer(address(this).balance);
+        payable(owner()).transfer(address(this).balance);
     }
 }
