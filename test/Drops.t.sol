@@ -68,7 +68,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.createDrop(0, 500e15, 10, "uri");
         vm.expectRevert();
-        drops.mint{value: 500e15}(0, 1);
+        drops.mintDrop{value: 500e15}(0, 1);
         vm.stopPrank();
     }
 
@@ -76,7 +76,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.activateSale(0);
         vm.expectRevert();
-        drops.mint{value: 500e15}(0, 1);
+        drops.mintDrop{value: 500e15}(0, 1);
         vm.stopPrank();
     }
 
@@ -85,7 +85,7 @@ contract DropsTest is Test {
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
         vm.expectRevert();
-        drops.mint{value: 500e15 * 10}(0, 11);
+        drops.mintDrop{value: 500e15 * 10}(0, 11);
         vm.stopPrank();
     }
 
@@ -93,7 +93,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.mint{value: 500e15}(0, 1);
+        drops.mintDrop{value: 500e15}(0, 1);
         assert(drops.balanceOf(owner, 0) == 1);
         vm.stopPrank();
     }
@@ -102,7 +102,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.mint{value: 500e15 * 10}(0, 10);
+        drops.mintDrop{value: 500e15 * 10}(0, 10);
         assert(drops.balanceOf(owner, 0) == 10);
         vm.stopPrank();
     }
@@ -171,7 +171,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.mint{value: 500e15}(0, 1);
+        drops.mintDrop{value: 500e15}(0, 1);
         drops.withdraw();
         vm.stopPrank();
     }
@@ -185,7 +185,7 @@ contract DropsTest is Test {
         vm.startPrank(owner);
         drops.activateSale(0);
         drops.createDrop(0, 500e15, 10, "uri");
-        drops.mint{value: 500e15}(0, 1);
+        drops.mintDrop{value: 500e15}(0, 1);
         vm.stopPrank();
         uint256 startBalance = owner.balance;
         vm.startPrank(testAddr);
