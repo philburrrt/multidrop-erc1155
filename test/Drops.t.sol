@@ -6,7 +6,7 @@ import "../src/Drops.sol";
 
 contract DropsTest is Test {
     Drops public drops;
-    string internal uri = "ipfs/QmTnqR164FVkMHXDWkVicRjaZTdaAB9LAftHKivFqAYtB9";
+    string internal uri = "ipfs://QmTnqR164FVkMHXDWkVicRjaZTdaAB9LAftHKivFqAYtB9";
 
     address testContract;
     address dropsContract;
