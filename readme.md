@@ -21,6 +21,10 @@ in your repository folder, run `foundryup` then `forge install`
 
 ### Deploy
 
+First, fill out .env with your information.
+
+Change $RINKBY_RPC_URL to $MAINNET_RPC_URL if you want to deploy to mainnet.
+
 `deployment.sh`
 
 ## Creating a drop
