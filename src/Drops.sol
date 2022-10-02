@@ -23,6 +23,7 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 // [] owner of contract can collect fees
 // [] Auto increment dropId
 // [] Move activateSale() to editDrop()
+// [] wlMint()
 
 contract Drops is ERC1155, Ownable {
     struct dropVariables {
@@ -32,6 +33,7 @@ contract Drops is ERC1155, Ownable {
         uint256 supply;
         string tokenURI;
         address creator;
+        string wlType;
         address wlToken;
         bool saleIsActive;
         bool acceptToken;
@@ -57,9 +59,25 @@ contract Drops is ERC1155, Ownable {
         return (dropInfo[id].tokenURI);
     }
 
+    /// @notice Percent number taken from all mints
+    function setFee(uint256 _fee) public onlyOwner {
+        fee = _fee;
+    }
+
+    /// @notice Owner of contract can set the payment token
     function setPaymentToken(address _tokenAddr) public onlyOwner {
         paymentToken = IERC20(_tokenAddr);
     }
+
+    /// @notice Any user can create a drop
+    /// @param id The drop id
+    /// @param ethPrice The price of the drop in ETH
+    /// @param tokenPrice The price of the drop in the paymentToken
+    /// @param acceptToken Whether or not the drop accepts the paymentToken
+    /// @param supplyAmt The max supply of the drop
+    /// @param wlType whether the wlToken is ERC20, ERC721, or ERC1155
+    /// @param wlToken The address of the token to whitelist
+    /// @param tokenURI The URI of the drop
 
     function createDrop(
         uint256 id,
@@ -67,8 +85,9 @@ contract Drops is ERC1155, Ownable {
         uint256 tokenPrice,
         bool acceptToken,
         uint256 supplyAmt,
+        string calldata wlType,
         address wlToken,
-        string memory tokenURI
+        string calldata tokenURI
     ) public {
         require(dropInfo[id].maxSupply == 0, "Drop already exists");
         dropInfo[id].creator = msg.sender;
@@ -76,9 +95,19 @@ contract Drops is ERC1155, Ownable {
         dropInfo[id].tokenPrice = tokenPrice;
         dropInfo[id].ethPrice = ethPrice;
         dropInfo[id].maxSupply = supplyAmt;
+        dropInfo[id].wlType = wlType;
         dropInfo[id].wlToken = wlToken;
         dropInfo[id].tokenURI = tokenURI;
     }
+
+    /// @notice The creator can edit a drop
+    /// @param id The drop id
+    /// @param ethPrice The price of the drop in ETH
+    /// @param tokenPrice The price of the drop in the paymentToken
+    /// @param acceptToken Whether or not the drop accepts the paymentToken
+    /// @param supplyAmt The max supply of the drop
+    /// @param wlType whether the wlToken is ERC20, ERC721, or ERC1155
+    /// @param wlToken The address of the token to whitelist
 
     function editDrop(
         uint256 id,
@@ -86,6 +115,7 @@ contract Drops is ERC1155, Ownable {
         uint256 tokenPrice,
         bool acceptToken,
         uint256 supplyAmt,
+        string calldata wlType,
         address wlToken
     ) public onlyCreator(id) {
         require(dropInfo[id].maxSupply != 0, "Drop does not exist");
@@ -94,6 +124,7 @@ contract Drops is ERC1155, Ownable {
         dropInfo[id].tokenPrice = tokenPrice;
         dropInfo[id].acceptToken = acceptToken;
         dropInfo[id].maxSupply = supplyAmt;
+        dropInfo[id].wlType = wlType;
         dropInfo[id].wlToken = wlToken;
     }
 
@@ -102,7 +133,7 @@ contract Drops is ERC1155, Ownable {
         dropInfo[id].tokenURI = tokenURI;
     }
 
-    // transfer ownership of the drop to a new address
+    /// @notice Transfer ownership of the drop to a new address
     function transferCreator(uint256 id, address newCreator)
         public
         onlyCreator(id)
@@ -110,7 +141,7 @@ contract Drops is ERC1155, Ownable {
         dropInfo[id].creator = newCreator;
     }
 
-    // basically airdrop for the creator's use
+    /// @notice Airdrop for the creator's use
     function devMint(
         uint256 id,
         address[] calldata recipients,
